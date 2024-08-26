@@ -49,17 +49,13 @@ const formFields = [
 ]
 
 const Form = () => {
+  const [form, setForm] = React.useState(
+    formFields.reduce((acc, field) => {
+      return { ...acc, [field.id]: '' };
+    }, {}),
+  );
 
-    const [form, setForm] = React.useState({
-        nome:'',
-        email:'',
-        senha: '',
-        cep: '',
-        rua:'',
-        bairro:'',
-        cidade:'',
-        estado:'',
-    })
+    const [response, setResponse] = React.useState(null)
 
     function handleChange({target}){
         const {id, value} = target
@@ -73,8 +69,10 @@ const Form = () => {
         headers:{
           'Content-Type':'application/json'
         },
-        body: form
-      })
+        body: JSON.stringify(form),
+      }).then((response =>{
+        console.log(response);
+      }))
     }
 
   return (
@@ -84,6 +82,7 @@ const Form = () => {
         <label htmlFor={id}>{label}</label>
         <input type={type} id={id} value={form[id]} onChange={handleChange} />
       </div>))}
+      {response && response.ok && <p>Formulario Enviado</p>}
       <button>Enviar</button>
     </form>
 
